@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCTKD Board Breaking Scorer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 16px;
+            background-color: #f5f5f5;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 24px;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .deduction-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .deduction-value {
+            font-size: 24px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .deduction-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button.minus {
+            background-color: #e74c3c;
+        }
+        
+        button.minus:hover {
+            background-color: #c0392b;
+        }
+        
+        button.plus {
+            background-color: #2ecc71;
+        }
+        
+        button.plus:hover {
+            background-color: #27ae60;
+        }
+        
+        .slider-container {
+            margin-bottom: 16px;
+        }
+        
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .slider-label {
+            font-weight: bold;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider-switch {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider-switch:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider-switch {
+            background-color: #2196F3;
+        }
+        
+        input:checked + .slider-switch:before {
+            transform: translateX(26px);
+        }
+        
+        .switch-label {
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        .slider-row {
+            display: flex;
+            align-items: center;
+        }
+        
+        .slider-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .range-min, .range-max {
+            font-size: 12px;
+            color: #666;
+            width: 30px;
+        }
+        
+        .range-min {
+            text-align: right;
+            margin-right: 8px;
+        }
+        
+        .range-max {
+            margin-left: 8px;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+        
+        .slider-value {
+            width: 50px;
+            height: 30px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 12px;
+            background-color: #f9f9f9;
+        }
+        
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .summary-label {
+            color: #555;
+        }
+        
+        .summary-value {
+            min-width: 60px;
+            text-align: right;
+        }
+        
+        .total-score {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>UCTKD Board Breaking Scorer</h1>
+    
+    <!-- Deductions Section -->
+    <section id="deductions-section">
+        <h2>Deductions (Min: -2.0, Max: 0.0)</h2>
+        <div class="deduction-controls">
+            <div class="deduction-value" id="deduction-value">0.0</div>
+            <div class="deduction-buttons">
+                <button class="plus" onclick="updateDeduction(1.0)">+1.0</button>
+                <button class="plus" onclick="updateDeduction(0.3)">+0.3</button>
+                <button class="minus" onclick="updateDeduction(-1.0)">-1.0</button>
+                <button class="minus" onclick="updateDeduction(-0.3)">-0.3</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Difficulty Section -->
+    <section id="difficulty-section">
+        <h2>Difficulty (Min: 0.0, Max: 5.0)</h2>
+        
+        <!-- Board 1 -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Board 1</div>
+                <!-- <div class="switch-container">
+                    <span class="switch-label">Multi-board (+0.2)</span>
+                    <label class="switch">
+                        <input type="checkbox" id="board1-multi" onchange="handleMultiboardToggle(1)">
+                        <span class="slider-switch"></span>
+                    </label>
+                </div> -->
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1" step="0.1" value="0" id="board1-slider" oninput="updateSliderValue('board1')">
+                    <span class="range-max">1.0</span>
+                </div>
+                <div class="slider-value" id="board1-value">0.0</div>
+            </div>
+        </div>
+        
+        <!-- Board 2 -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Board 2</div>
+                <div class="switch-container">
+                    <span class="switch-label">Multi-board (+0.2)</span>
+                    <label class="switch">
+                        <input type="checkbox" id="board2-multi" onchange="handleMultiboardToggle(2)">
+                        <span class="slider-switch"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1" step="0.1" value="0" id="board2-slider" oninput="updateSliderValue('board2')">
+                    <span class="range-max">1.0</span>
+                </div>
+                <div class="slider-value" id="board2-value">0.0</div>
+            </div>
+        </div>
+        
+        <!-- Board 3 -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Board 3</div>
+                <div class="switch-container">
+                    <span class="switch-label">Multi-board (+0.2)</span>
+                    <label class="switch">
+                        <input type="checkbox" id="board3-multi" onchange="handleMultiboardToggle(3)">
+                        <span class="slider-switch"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1" step="0.1" value="0" id="board3-slider" oninput="updateSliderValue('board3')">
+                    <span class="range-max">1.0</span>
+                </div>
+                <div class="slider-value" id="board3-value">0.0</div>
+            </div>
+        </div>
+        
+        <!-- Board 4 -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Board 4</div>
+                <div class="switch-container">
+                    <span class="switch-label">Multi-board (+0.2)</span>
+                    <label class="switch">
+                        <input type="checkbox" id="board4-multi" onchange="handleMultiboardToggle(4)">
+                        <span class="slider-switch"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1" step="0.1" value="0" id="board4-slider" oninput="updateSliderValue('board4')">
+                    <span class="range-max">1.0</span>
+                </div>
+                <div class="slider-value" id="board4-value">0.0</div>
+            </div>
+        </div>
+        
+        <!-- Board 5 -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Board 5</div>
+                <div class="switch-container">
+                    <span class="switch-label">Multi-board (+0.2)</span>
+                    <label class="switch">
+                        <input type="checkbox" id="board5-multi" onchange="handleMultiboardToggle(5)">
+                        <span class="slider-switch"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1" step="0.1" value="0" id="board5-slider" oninput="updateSliderValue('board5')">
+                    <span class="range-max">1.0</span>
+                </div>
+                <div class="slider-value" id="board5-value">0.0</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Presentation Section -->
+    <section id="presentation-section">
+        <h2>Presentation (Min: 0.0, Max: 5.0)</h2>
+        
+        <!-- Technique -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Technique</div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="technique-slider" oninput="updateSliderValue('technique')">
+                    <span class="range-max">1.25</span>
+                </div>
+                <div class="slider-value" id="technique-value">0.0</div>
+            </div>
+        </div>
+        
+        <!-- Creativity -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Creativity</div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="creativity-slider" oninput="updateSliderValue('creativity')">
+                    <span class="range-max">1.25</span>
+                </div>
+                <div class="slider-value" id="creativity-value">0.0</div>
+            </div>
+        </div>
+        
+        <!-- Balance and Rhythm -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Balance and Rhythm</div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="balance-slider" oninput="updateSliderValue('balance')">
+                    <span class="range-max">1.25</span>
+                </div>
+                <div class="slider-value" id="balance-value">0.0</div>
+            </div>
+        </div>
+        
+        <!-- Expression of Energy -->
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-label">Expression of Energy</div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-wrapper">
+                    <span class="range-min">0.0</span>
+                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="energy-slider" oninput="updateSliderValue('energy')">
+                    <span class="range-max">1.25</span>
+                </div>
+                <div class="slider-value" id="energy-value">0.0</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Summary Section -->
+    <section id="summary-section">
+        <h2>Summary</h2>
+        <div class="summary">
+            <div class="summary-label">Difficulty:</div>
+            <div class="summary-value" id="difficulty-sum">0.0</div>
+        </div>
+        <div class="summary">
+            <div class="summary-label">Presentation:</div>
+            <div class="summary-value" id="presentation-sum">0.0</div>
+        </div>
+        <div class="summary">
+            <div class="summary-label">Deductions:</div>
+            <div class="summary-value" id="deductions-sum">0.0</div>
+        </div>
+        <div class="total-score">
+            Total Score: <span id="total-score">0.0</span>
+        </div>
+    </section>
+    
+    <script>
+        // Initialize deduction value
+        let deductionValue = 0;
+        
+        // Update deduction value
+        function updateDeduction(value) {
+            deductionValue += value;
+            // Ensure deduction is never negative
+            if (deductionValue < -2) {
+                deductionValue = -2;
+            } else if (deductionValue > 0) {
+                deductionValue = 0;
+            }
+            document.getElementById('deduction-value').textContent = deductionValue.toFixed(1);
+            calculateTotals();
+        }
+        
+        // Update slider value display
+        function updateSliderValue(id) {
+            const slider = document.getElementById(`${id}-slider`);
+            const valueDisplay = document.getElementById(`${id}-value`);
+            if (id.includes("board"))
+                valueDisplay.textContent = parseFloat(slider.value).toFixed(1);
+            else
+                valueDisplay.textContent = parseFloat(slider.value).toFixed(2);
+            calculateTotals();
+        }
+        
+        // Calculate totals
+        function calculateTotals() {
+            // Calculate difficulty sum
+            let difficultySum = 0;
+            let multiboardCount = 0;
+            
+            for (let i = 1; i <= 5; i++) {
+                const boardValue = parseFloat(document.getElementById(`board${i}-slider`).value);
+                if (i != 1) {
+                    const isMulti = document.getElementById(`board${i}-multi`).checked;
+                
+                    if (isMulti) {
+                        multiboardCount++;
+                    }
+                }
+                
+                difficultySum += boardValue;
+            }
+            
+            // Add 0.2 for each multi-board switch that is toggled
+            difficultySum += (multiboardCount * 0.2);
+            
+            // Calculate presentation sum
+            const techniqueValue = parseFloat(document.getElementById('technique-slider').value);
+            const creativityValue = parseFloat(document.getElementById('creativity-slider').value);
+            const balanceValue = parseFloat(document.getElementById('balance-slider').value);
+            const energyValue = parseFloat(document.getElementById('energy-slider').value);
+            
+            const presentationSum = techniqueValue + creativityValue + balanceValue + energyValue;
+            
+            // Update summary values
+            document.getElementById('difficulty-sum').textContent = difficultySum.toFixed(1);
+            document.getElementById('presentation-sum').textContent = presentationSum.toFixed(2);
+            document.getElementById('deductions-sum').textContent = deductionValue.toFixed(1);
+            
+            // Calculate total score
+            const totalScore = difficultySum + presentationSum + deductionValue;
+            document.getElementById('total-score').textContent = totalScore.toFixed(2);
+        }
+
+        const descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+
+        function addValueChangeEvent(slider) {
+            Object.defineProperty(slider, 'value', {
+            get() {
+                return descriptor.get.call(this);
+            },
+            set(newValue) {
+                const oldValue = this.value;
+                descriptor.set.call(this, newValue);
+                if (newValue !== oldValue) {
+                    this.dispatchEvent(new Event('valuechange'));
+                }
+            }
+            });
+        }
+
+        for (let i = 1; i <= 5; i++) {
+            const slider = document.getElementById(`board${i}-slider`);
+            addValueChangeEvent(slider);
+        }
+
+        let controller = new AbortController();
+
+        function resetController() {
+            console.log("aborting controller");
+            controller.abort();
+            controller = new AbortController();
+        }   
+
+        function trackPrevSlider(boardNum) {
+            console.log(`adding tracker for ${boardNum}`);
+
+            // Copy value from the slider above
+            const prevSlider = document.getElementById(`board${boardNum-1}-slider`);
+            const currentSlider = document.getElementById(`board${boardNum}-slider`);
+            
+            currentSlider.value = prevSlider.value;
+            prevSlider.addEventListener("valuechange", () => {
+                currentSlider.value = prevSlider.value;
+                updateSliderValue(`board${boardNum}`);
+            }, { signal: controller.signal });
+            prevSlider.addEventListener('input', () => {
+                currentSlider.value = prevSlider.value;
+                updateSliderValue(`board${boardNum}`);
+            }, { signal: controller.signal });
+            currentSlider.disabled = true;
+            updateSliderValue(`board${boardNum}`);
+        }
+
+        // Handle multi-board toggle
+        function handleMultiboardToggle(boardNum) {
+            const isChecked = document.getElementById(`board${boardNum}-multi`).checked;
+            
+            if (isChecked && boardNum > 1) {
+                trackPrevSlider(boardNum);
+            } else if (!isChecked && boardNum > 1) {
+                resetController();
+                
+                for (let i = 2; i <= 5; i++) {
+                    const currentSlider = document.getElementById(`board${i}-slider`);
+
+                    currentSlider.disabled = false;
+                    updateSliderValue(`board${i}`);
+                }
+                for (let i = 2; i <= 5; i++) {
+                    if (document.getElementById(`board${i}-multi`).checked)
+                        trackPrevSlider(i);
+                }
+            }
+            
+            calculateTotals();
+        }
+        
+        // Initialize all slider values
+        function initializeSliders() {
+            const sliderIds = [
+                'board1', 'board2', 'board3', 'board4', 'board5',
+                'technique', 'creativity', 'balance', 'energy'
+            ];
+            
+            sliderIds.forEach(id => {
+                updateSliderValue(id);
+            });
+            
+            calculateTotals();
+        }
+        
+        // Initialize on page load
+        window.onload = initializeSliders;
+    </script>
+</body>
+</html>
