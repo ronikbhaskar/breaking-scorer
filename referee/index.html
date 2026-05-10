@@ -24,11 +24,6 @@
             margin-bottom: 24px;
         }
         
-        a {
-            text-align: center;
-            color: #ffffff;
-        }
-        
         section {
             background-color: white;
             border-radius: 8px;
@@ -250,29 +245,11 @@
             font-weight: bold;
             color: #333;
         }
-
-        .redirect {
-            display: flex;
-            justify-content: center;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .redirect button {
-            color: #ffffff;
-            background-color: #800000;
-        }
     </style>
 </head>
 <body>
     <h1>UCTKD Board Breaking Scorer</h1>
-    <section class="redirect">
-
-        <button class="redirect" onclick="location.href = 'referee/index.html';"><a href="referee/index.html">Click here for Ref-only.</a></button>
-        <button class="redirect" onclick="location.href = 'judge/index.html';"><a href="judge/index.html">Click here for Judge-only.</a></button>
-
-    </section>
-    
+    <h1>REFEREE PAGE</h1>
     
     <!-- Deductions Section -->
     <section id="deductions-section">
@@ -288,206 +265,8 @@
         </div>
     </section>
     
-    <!-- Difficulty Section -->
-    <section id="difficulty-section">
-        <h2>Difficulty (Min: 0.0, Max: 5.0)</h2>
-        
-        <!-- Board 1 -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Board 1</div>
-                <!-- <div class="switch-container">
-                    <span class="switch-label">Multi-board (+0.2)</span>
-                    <label class="switch">
-                        <input type="checkbox" id="board1-multi" onchange="handleMultiboardToggle(1)">
-                        <span class="slider-switch"></span>
-                    </label>
-                </div> -->
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1" step="0.1" value="0" id="board1-slider" oninput="updateSliderValue('board1')">
-                    <span class="range-max">1.0</span>
-                </div>
-                <div class="slider-value" id="board1-value">0.0</div>
-            </div>
-        </div>
-        
-        <!-- Board 2 -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Board 2</div>
-                <div class="switch-container">
-                    <span class="switch-label">Multi-board (+0.2)</span>
-                    <label class="switch">
-                        <input type="checkbox" id="board2-multi" onchange="handleMultiboardToggle(2)">
-                        <span class="slider-switch"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1" step="0.1" value="0" id="board2-slider" oninput="updateSliderValue('board2')">
-                    <span class="range-max">1.0</span>
-                </div>
-                <div class="slider-value" id="board2-value">0.0</div>
-            </div>
-        </div>
-        
-        <!-- Board 3 -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Board 3</div>
-                <div class="switch-container">
-                    <span class="switch-label">Multi-board (+0.2)</span>
-                    <label class="switch">
-                        <input type="checkbox" id="board3-multi" onchange="handleMultiboardToggle(3)">
-                        <span class="slider-switch"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1" step="0.1" value="0" id="board3-slider" oninput="updateSliderValue('board3')">
-                    <span class="range-max">1.0</span>
-                </div>
-                <div class="slider-value" id="board3-value">0.0</div>
-            </div>
-        </div>
-        
-        <!-- Board 4 -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Board 4</div>
-                <div class="switch-container">
-                    <span class="switch-label">Multi-board (+0.2)</span>
-                    <label class="switch">
-                        <input type="checkbox" id="board4-multi" onchange="handleMultiboardToggle(4)">
-                        <span class="slider-switch"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1" step="0.1" value="0" id="board4-slider" oninput="updateSliderValue('board4')">
-                    <span class="range-max">1.0</span>
-                </div>
-                <div class="slider-value" id="board4-value">0.0</div>
-            </div>
-        </div>
-        
-        <!-- Board 5 -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Board 5</div>
-                <div class="switch-container">
-                    <span class="switch-label">Multi-board (+0.2)</span>
-                    <label class="switch">
-                        <input type="checkbox" id="board5-multi" onchange="handleMultiboardToggle(5)">
-                        <span class="slider-switch"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1" step="0.1" value="0" id="board5-slider" oninput="updateSliderValue('board5')">
-                    <span class="range-max">1.0</span>
-                </div>
-                <div class="slider-value" id="board5-value">0.0</div>
-            </div>
-        </div>
-    </section>
     
-    <!-- Presentation Section -->
-    <section id="presentation-section">
-        <h2>Presentation (Min: 0.0, Max: 5.0)</h2>
         
-        <!-- Technique -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Technique</div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="technique-slider" oninput="updateSliderValue('technique')">
-                    <span class="range-max">1.25</span>
-                </div>
-                <div class="slider-value" id="technique-value">0.0</div>
-            </div>
-        </div>
-        
-        <!-- Creativity -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Creativity</div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="creativity-slider" oninput="updateSliderValue('creativity')">
-                    <span class="range-max">1.25</span>
-                </div>
-                <div class="slider-value" id="creativity-value">0.0</div>
-            </div>
-        </div>
-        
-        <!-- Balance and Rhythm -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Balance and Rhythm</div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="balance-slider" oninput="updateSliderValue('balance')">
-                    <span class="range-max">1.25</span>
-                </div>
-                <div class="slider-value" id="balance-value">0.0</div>
-            </div>
-        </div>
-        
-        <!-- Expression of Energy -->
-        <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-label">Expression of Energy</div>
-            </div>
-            <div class="slider-row">
-                <div class="slider-wrapper">
-                    <span class="range-min">0.0</span>
-                    <input type="range" min="0" max="1.25" step="0.05" value="0" id="energy-slider" oninput="updateSliderValue('energy')">
-                    <span class="range-max">1.25</span>
-                </div>
-                <div class="slider-value" id="energy-value">0.0</div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Summary Section -->
-    <section id="summary-section">
-        <h2>Summary</h2>
-        <div class="summary">
-            <div class="summary-label">Difficulty:</div>
-            <div class="summary-value" id="difficulty-sum">0.0</div>
-        </div>
-        <div class="summary">
-            <div class="summary-label">Presentation:</div>
-            <div class="summary-value" id="presentation-sum">0.0</div>
-        </div>
-        <div class="summary">
-            <div class="summary-label">Deductions:</div>
-            <div class="summary-value" id="deductions-sum">0.0</div>
-        </div>
-        <div class="total-score">
-            Total Score: <span id="total-score">0.0</span>
-        </div>
-    </section>
-    
     <script>
         // Initialize deduction value
         let deductionValue = 0;

@@ -24,11 +24,6 @@
             margin-bottom: 24px;
         }
         
-        a {
-            text-align: center;
-            color: #ffffff;
-        }
-        
         section {
             background-color: white;
             border-radius: 8px;
@@ -250,32 +245,14 @@
             font-weight: bold;
             color: #333;
         }
-
-        .redirect {
-            display: flex;
-            justify-content: center;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .redirect button {
-            color: #ffffff;
-            background-color: #800000;
-        }
     </style>
 </head>
 <body>
     <h1>UCTKD Board Breaking Scorer</h1>
-    <section class="redirect">
-
-        <button class="redirect" onclick="location.href = 'referee/index.html';"><a href="referee/index.html">Click here for Ref-only.</a></button>
-        <button class="redirect" onclick="location.href = 'judge/index.html';"><a href="judge/index.html">Click here for Judge-only.</a></button>
-
-    </section>
-    
+    <h1>JUDGE PAGE</h1>
     
     <!-- Deductions Section -->
-    <section id="deductions-section">
+    <!-- <section id="deductions-section">
         <h2>Deductions (Min: -2.0, Max: 0.0)</h2>
         <div class="deduction-controls">
             <div class="deduction-value" id="deduction-value">0.0</div>
@@ -286,7 +263,7 @@
                 <button class="minus" onclick="updateDeduction(-0.3)">-0.3</button>
             </div>
         </div>
-    </section>
+    </section> -->
     
     <!-- Difficulty Section -->
     <section id="difficulty-section">
@@ -479,10 +456,10 @@
             <div class="summary-label">Presentation:</div>
             <div class="summary-value" id="presentation-sum">0.0</div>
         </div>
-        <div class="summary">
+        <!-- <div class="summary">
             <div class="summary-label">Deductions:</div>
             <div class="summary-value" id="deductions-sum">0.0</div>
-        </div>
+        </div> -->
         <div class="total-score">
             Total Score: <span id="total-score">0.0</span>
         </div>
