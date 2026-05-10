@@ -571,15 +571,15 @@
             const currentSlider = document.getElementById(`board${boardNum}-slider`);
             
             currentSlider.value = prevSlider.value;
-            prevSlider.addEventListener("valuechange", () => {
-                currentSlider.value = prevSlider.value;
-                updateSliderValue(`board${boardNum}`);
-            }, { signal: controller.signal });
-            prevSlider.addEventListener('input', () => {
-                currentSlider.value = prevSlider.value;
-                updateSliderValue(`board${boardNum}`);
-            }, { signal: controller.signal });
-            currentSlider.disabled = true;
+            // prevSlider.addEventListener("valuechange", () => {
+            //     currentSlider.value = prevSlider.value;
+            //     updateSliderValue(`board${boardNum}`);
+            // }, { signal: controller.signal });
+            // prevSlider.addEventListener('input', () => {
+            //     currentSlider.value = prevSlider.value;
+            //     updateSliderValue(`board${boardNum}`);
+            // }, { signal: controller.signal });
+            // currentSlider.disabled = true;
             updateSliderValue(`board${boardNum}`);
         }
 
